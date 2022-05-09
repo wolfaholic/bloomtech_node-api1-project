@@ -66,7 +66,26 @@ server.get('/api/users/:id', (req, res) => {
         })
 });
 
-//
+//PUT
+server.put ('/api/users/:id', (req, res) => {
+    let id = req.params.id;
+    let user = req.body;
+
+    User.update(id, user)
+        .then(possibleUser => {
+            if(!possibleUser) {
+            res.status(404).json({
+                message: 'The user with the specified ID does not exist'
+            })
+        } else if(!user.name || !user.bio) {
+            res.status(400).json({
+                message: "Please provide name and bio for the user"
+            })
+        } else {
+            res.json(possibleUser)
+        }
+    })
+})
 
 // Server Export
 module.exports = server;  
