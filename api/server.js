@@ -66,7 +66,7 @@ server.get('/api/users/:id', (req, res) => {
         })
 });
 
-//PUT
+//PUT Update User
 server.put ('/api/users/:id', (req, res) => {
     let id = req.params.id;
     let user = req.body;
@@ -86,6 +86,31 @@ server.put ('/api/users/:id', (req, res) => {
         }
     })
 })
+
+// DELETE remove user
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
+
+    User.remove(id)
+        .then(removedUser => {
+            if(!removedUser) {
+                res.status(404).json({
+                    message: 'The user with the specified ID does not exist'
+                })
+            } else {
+                res.status(200).json(removedUser)
+            }
+        }) 
+        .catch(err =>{
+            res.status(500).json({
+                message: 'The user could not be removed',
+                err: err.message
+            })
+        })
+})
+
+
+
 
 // Server Export
 module.exports = server;  
