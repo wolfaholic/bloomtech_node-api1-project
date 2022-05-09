@@ -8,6 +8,29 @@ server.use(express.json());
 
 //Endpoints
 
+//POST new user creation
+server.post('/api/users', (req, res) => {
+    const user = req.body;
+    if (!user.name|| !user.bio) {
+        res.status(400).json({
+            message: 'Please provide name and bio for the user'
+        })
+    } else {
+        User.insert(user)
+            .then(createdUser => {
+                res.status(201).json(createdUser)
+            })
+            .catch(err => {
+                res.status(500).json ({
+                    message: 'There was an error while saving the user to the database',
+                    err: err.message,
+                    stack: err.stack
+                })
+            })
+    }
+})
+
+
 //GET users
 server.get('/api/users', (req, res) => {
     User.find()
@@ -42,6 +65,8 @@ server.get('/api/users/:id', (req, res) => {
             })
         })
 });
+
+//
 
 // Server Export
 module.exports = server;  
